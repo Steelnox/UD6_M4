@@ -103,7 +103,7 @@ namespace UD6_M4
                     }
                     catch (InvalidOperationException ex)
                     {
-                        Console.WriteLine("Opcion invalida. Vuelve a intentarlo de nuevo");
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
