@@ -13,8 +13,11 @@ namespace UD6_M4
         int billete100 = 0;
         int billete200 = 0;
         int billete500 = 0;
+
+        int num_plato = 0;
         public void Principal()
         {
+            string platoPedido = "";
            
             int precioTotalComida = 0;
             int pagoCliente = 0;
@@ -23,7 +26,7 @@ namespace UD6_M4
             string[] menu_array = new string[5];
             int[] precio_array = new int[5];
 
-            int seguir = 1;
+            string seguir = "";
 
             bool existe = true;
             bool correcto = false;
@@ -69,41 +72,38 @@ namespace UD6_M4
             {
                 Console.WriteLine(menu_array[i] + " " + precio_array[i] + " euros");
             }
-
-            while(seguir == 1)
+            seguir = "Si";
+            while(seguir == "Si")
             {
-                seguir = 0;
                 correcto = false;
                 Console.WriteLine("Escoja un plato:");
-                pedido.Add(Console.ReadLine());
-                Console.WriteLine("¿Quiere seguir pidiendo comida? 1.Si / 0.No");
+                platoPedido = Console.ReadLine();
+                try
+                {
+                    ExistePlato(platoPedido,menu_array);
+                    pedido.Add(platoPedido);
+                    precioTotalComida += precio_array[num_plato];
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                Console.WriteLine("¿Quiere seguir pidiendo comida? Si / No");
                 while (!correcto)
                 {
                     try
                     {
-                        seguir = Convert.ToInt32(Console.ReadLine());
+                        seguir = Console.ReadLine();
+                        SeguirPedido(seguir);
                         correcto = true;
                     }
-                    catch (FormatException)
+                    catch (InvalidOperationException ex)
                     {
                         Console.WriteLine("Opcion invalida. Vuelve a intentarlo de nuevo");
                     }
                 }
-            }
-
-            foreach (string comida in pedido)
-            {
-                existe = false;
-                for (int i = 0; i < menu_array.Length; i++)
-                {
-                    if(comida == menu_array[i])
-                    {
-                        precioTotalComida += precio_array[i];
-                        existe = true;
-                    }
-                }
-
-                if (!existe) Console.WriteLine("El plato " + comida + " no existe");
             }
 
             Console.WriteLine("El precio total de la comida es " + precioTotalComida + " euros");
@@ -199,6 +199,34 @@ namespace UD6_M4
                     Console.WriteLine("y " + cambio + " euros en monedas");
                     cambioFinalizado = true;
                 }
+            }
+        }
+
+        void ExistePlato(string platoPedido, string[] menu_array)
+        {
+            bool existe = false;
+            
+            for (int i = 0; i < menu_array.Length; i++)
+            {
+                if (platoPedido == menu_array[i])
+                {
+                    num_plato = i;
+                    existe = true;
+                }
+            }
+
+            if (!existe)
+            {
+                throw new InvalidOperationException("No existe este plato");
+            }
+            
+        }
+        
+        void SeguirPedido(string seguir)
+        {
+            if (seguir != "Si" && seguir != "No")
+            {
+                throw new InvalidOperationException("No existe ese valor introducido, por favor ponga Si o No");
             }
         }
     }
