@@ -14,9 +14,11 @@ namespace UD6_M4
         int billete200 = 0;
         int billete500 = 0;
 
-        int num_plato = 0;
         public void Principal()
         {
+            Excepcion_ExistePlato ex_plato = new Excepcion_ExistePlato();
+            ExcepcionSeguir ex_seguir = new ExcepcionSeguir();
+            
             string platoPedido = "";
            
             int precioTotalComida = 0;
@@ -80,9 +82,9 @@ namespace UD6_M4
                 platoPedido = Console.ReadLine();
                 try
                 {
-                    ExistePlato(platoPedido,menu_array);
+                    ex_plato.ExistePlato(platoPedido, menu_array);
                     pedido.Add(platoPedido);
-                    precioTotalComida += precio_array[num_plato];
+                    precioTotalComida += precio_array[ex_plato.num_plato];
 
                 }
                 catch (InvalidOperationException ex)
@@ -96,7 +98,7 @@ namespace UD6_M4
                     try
                     {
                         seguir = Console.ReadLine();
-                        SeguirPedido(seguir);
+                        ex_seguir.SeguirPedido(seguir);
                         correcto = true;
                     }
                     catch (InvalidOperationException ex)
@@ -202,32 +204,6 @@ namespace UD6_M4
             }
         }
 
-        void ExistePlato(string platoPedido, string[] menu_array)
-        {
-            bool existe = false;
-            
-            for (int i = 0; i < menu_array.Length; i++)
-            {
-                if (platoPedido == menu_array[i])
-                {
-                    num_plato = i;
-                    existe = true;
-                }
-            }
-
-            if (!existe)
-            {
-                throw new InvalidOperationException("No existe este plato");
-            }
-            
-        }
         
-        void SeguirPedido(string seguir)
-        {
-            if (seguir != "Si" && seguir != "No")
-            {
-                throw new InvalidOperationException("No existe ese valor introducido, por favor ponga Si o No");
-            }
-        }
     }
 }
